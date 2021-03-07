@@ -2,9 +2,10 @@
 .idea/
 build/
 classes/
+history/
 target/
 *.log
-lib/
 *.iml
-.history/
+bin/
 out/
+.DS_Store

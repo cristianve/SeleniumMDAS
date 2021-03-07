@@ -1,5 +1,10 @@
 # Eclipse configuration
 
+## Requirements
+* Download from [Artifactory](http://repository.kiosk.roche.com:80/infinity-resources-local/IDE/eclipse.2018-09.zip)
+* Unzip and startup _eclipse.exe_
+* Choose a folder for your workspace
+
 ## Initial steps
 * Configure "autosave" by open _window/preferences_, and then:
  ![autosave](images/eclipse-save-actions.png)

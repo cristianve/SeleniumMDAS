@@ -9,16 +9,19 @@ If following the guide causes unnecessary hoop-jumping or otherwise less-readabl
 *readability trumps the guide*.  However, if the more 'readable' variant comes with
 perils or pitfalls, readability may be sacrificed.
 
-In general, much of our style and conventions mirror the [Google's Java Style Guide](https://google.github.io/styleguide/javaguide.html).
+In general, much of our style and conventions mirror the
+[Code Conventions for the Java Programming Language](http://www.oracle.com/technetwork/java/codeconvtoc-136057.html)
+and [Google's Java Style Guide](https://google.github.io/styleguide/javaguide.html).
 
 [TOC]
 
 ## Recommended reading
-- [Clean Code by Robert C. Martin](https://medium.com/mindorks/how-to-write-clean-code-lessons-learnt-from-the-clean-code-robert-c-martin-9ffc7aef870c)
+- [Effective Java](http://www.amazon.com/Effective-Java-Edition-Joshua-Bloch/dp/0321356683)
 
-- [Effective Java by Joshua Bloch](http://www.amazon.com/Effective-Java-Edition-Joshua-Bloch/dp/0321356683)
+- [Java Concurrency in Practice](http://jcip.net/)
 
-- [Code Complete 2](http://www.stevemcconnell.com/cc.htm). Not java-specific, but a good handbook for programming best-practices.
+- [Code Complete 2](http://www.stevemcconnell.com/cc.htm)<br />
+  Not java-specific, but a good handbook for programming best-practices.
 
 ## Coding style
 

@@ -1,5 +1,6 @@
 # Java Best practices
 
+* Download [JDK](https://drive.google.com/open?id=1vKeS7olEr9nmoA3m31gmEhNoa8kztyI5).
 * Read the [Java Naming Conventions]:http://www.oracle.com/technetwork/java/codeconventions-135099.html
 * Read [the Coding style guide](style-guide.md)
 
@@ -34,7 +35,82 @@ And take care of:
             "showStatus"
 ```
 
-- Use LOGGER to log details of the execution. To show the flow of the execution.
+- Selenium framework encapsulated in PageObject.
+    So to access a text field you should have accessor methods that take and return a string, check boxes should use booleans, and buttons should be represented by action oriented method names.
+     In general page object operations should return fundamental types (strings, dates) or other page objects.
+     I favor having no assertions in page objects
+    "Having page objects be responsible for creating other page objects in response to things like navigation is common advice. However some practitioners prefer that page objects return some generic browser context, and the tests control which page objects to build on top of that context based on the flow of the test (particularly conditional flows). Their preference is based on the fact that the test script knows what pages are expected next and this knowledge doesn't need to be duplicated in the page objects themselves."
+    --> In our case we use IOC to inject pages, so we don't need to retun a PageObject from a PageObject.(http://martinfowler.com/bliki/PageObject.html)
+
+    Example:
+```groovy
+        BAD:
+            @Step
+            public void clickBtnIsModified() {
+                liSjsonListBoxSelectorPage.getBtnIsModified().click(); --> we are expossing de WebElementFacade 'BtnIsModified'
+            }
+        OK:
+            @Step
+            public void clickBtnGetSelected() {
+                liSjsonListBoxSelectorPage.checkSelected();
+            }
+```
+
+- Never put call of a method inside an Assert, it has an special timeout:
+    Example:
+```groovy
+        BAD:
+            Assert.assertNotNull("Error popup must appear",popupWidget.isDisplayed());
+        OK:
+            boolean isPopupDisplayed = popupWidget.isDisplayed()
+            Assert.assertTrue("Error popup must appear",isPopupDisplayed);
+```
+
+ - When put @Step? Only if required! On every @Step Serenity will take two screenshots, one before the executiion and the other after the execution.
+```groovy
+         BAD:
+            @Step
+            public void clickBtnIsModified() {
+                liSjsonListBoxSelectorPage.getBtnIsModified().click();
+            }
+        OK:
+            public void clickBtnGetSelected() {
+                liSjsonListBoxSelectorPage.checkSelected();
+            }
+```
+* Selectors approach. In order of preference:
+  - By id. Example:
+```java
+private WebElementFacade btnOK;
+```
+  - By name (if it is unique)
+        Example:
+```groovy
+@FindBy(name="btnG")
+WebElementFacade searchButton;
+```
+  - By cssSelector: [https://saucelabs.com/resources/articles/selenium-tips-css-selectors]https://saucelabs.com/resources/articles/selenium-tips-css-selectors
+        Example:
+```groovy
+@FindBy(css = ".Appcombo_menu")
+private WebElementFacade appcomboMenu;
+
+Also in Infinity we can use "zentext" to find objects
+  @FindBy(css = td[zentext='hola']
+```
+- Allways "optimize imports" --> IntelliJ settings or Ctrl + Alt + O
+
+- Injection of components (pages) without any annotation
+    Example:
+```groovy
+        BAD:
+            @Steps
+            private PopupWidget popupWidget; --> It is not Ok because "popupWidget" extends a PageObject
+        OK:
+           private PopupWidget popupWidget;
+```
+
+- Use LOGGER to log details of the execution:
 ```groovy
 
     import org.slf4j.Logger;
@@ -43,3 +119,83 @@ And take care of:
     ....
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 ```
+- Om every page function put this line as template:
+```groovy
+  Example:
+
+  public void test(){
+
+        switchToFrame(IFRAME);
+        ....
+
+    }
+```
+- All the asserts should be only in StepsDefinitions classes, and using: org.assertj.core.api.Assertions.assertThat
+    @See: http://joel-costigliola.github.io/assertj/
+
+- Finding improvements:
+```groovy
+            StepDef:
+                private LISjsProviderPage liSjsProviderPage;
+
+                @Steps
+                private LISjsProviderSteps lisjsProviderSteps;
+
+                @Then("^verify 'Success' and 'Always' callbacks executed$")
+                public void verifyAndCallbacksExecuted() {
+                    Assert.assertTrue(lisjsProviderSteps.getResultSuccessAlways().contains("Succes")
+                            && lisjsProviderSteps.getResultSuccessAlways().contains("Always"));
+                }
+            Step:
+                public String getResultSuccessAlways() {
+                    return liSjsProviderPage.getResultSuccessAlways();
+                }
+
+            Page:
+                private static final String RESULT_200_OUTPUT_FIELD = "div[id='partialResult200']";
+
+                public String getResultsSuccessAlways() {
+                    return $.byCSSSelector(RESULT_200_OUTPUT_FIELD).getText();
+                }
+```
+
+Result:
+ * The step is not needed
+ * Only one access to the browser
+ * AseertJ use
+```groovy
+        StepDef:
+			private LISjsProviderPage liSjsProviderPage;
+
+            @Then("^verify 'Success' callback executed$")
+            public void verifySuccessCallbacksExecuted() {
+                String actual = liSjsProviderPage.getSuccessCallback();
+                assertThat(actual).contains(SUCCES).contains(ALWAYS);
+            }
+        Page:
+            private WebElementFacade partialResult200;
+
+            public String getSuccessCallback() {
+                return partialResult200.getText();
+            }
+```
+
+* XPath is the last tecnice to use, but if you need, this is an exemple of how it works:
+ ```html
+    <a>
+    <li> parent 1
+        <div>
+            <span class="child-title child-style">title 1</span>
+            <span class="child-date child-style"> date 1</span>
+            <span class="child-author">author 1</span>
+        </div>
+    </li>
+    </a>
+ ```
+If you want to get Date Info, you should use
+```groovy
+  WebElementFacade parent = driver.findElement(By.xpath("//a/li"));
+  WebElementFacade date = parent.findElement(By.xpath("div/span[contains(@class, 'child-date')]"));
+  WebElementFacade date = parent.findElement(By.xpath("//span[contains(@class, 'child-date')]"))
+```
+
