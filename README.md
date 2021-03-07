@@ -5,7 +5,11 @@
 
 * 1. Prueba automatizada
 
-## Gherkin Escenario 📷📦
+## Gherkin Escenario 📷
 
-![IMAGE MAIN 1](/images/escenario.png)
+![Gherkin Scenareo](/images/escenario.PNG)
 
+
+## Resultados
+
+![IMAGE MAIN 1](/images/escenario.PNG)
