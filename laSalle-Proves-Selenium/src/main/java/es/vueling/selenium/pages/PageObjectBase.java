@@ -1,4 +1,4 @@
-package es.s2o.selenium.pages;
+package es.vueling.selenium.pages;
 
 import net.serenitybdd.core.pages.PageObject;
 import org.jsoup.Jsoup;

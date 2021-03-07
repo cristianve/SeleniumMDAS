@@ -1,4 +1,4 @@
-package es.s2o.selenium.tests.reservations;
+package es.vueling.selenium.tests.reservations;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import net.thucydides.core.ThucydidesSystemProperty;
