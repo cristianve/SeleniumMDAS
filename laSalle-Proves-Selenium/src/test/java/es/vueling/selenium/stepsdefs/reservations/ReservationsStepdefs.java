@@ -70,7 +70,6 @@ public class ReservationsStepdefs {
 
         List<ReservationDto> actualReservations = reservationListPage.getReservationList();
 
-
         assertThat(actualReservations).as("Reservation list").usingFieldByFieldElementComparator().containsExactlyElementsOf(reservations);
     }
 }
